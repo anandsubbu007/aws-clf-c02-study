@@ -1,0 +1,23 @@
+import type { ServiceEntry } from '../../types';
+
+const INT = 'm11-application-integration';
+const BIZ = 'm11-business-and-end-user-computing';
+const DEV = 'm11-developer-tools';
+const FIOT = 'm11-frontend-and-iot';
+
+export const services: ServiceEntry[] = [
+  { name: 'Amazon EventBridge', category: 'Application Integration', lessonId: INT, inScope: true, summary: 'Serverless event bus that routes events from AWS services, SaaS apps and your code to targets using rules, plus cron and rate schedules; pick it to react to events or run scheduled tasks.', url: 'https://aws.amazon.com/eventbridge/' },
+  { name: 'Amazon Simple Notification Service (Amazon SNS)', category: 'Application Integration', lessonId: INT, inScope: true, summary: 'Managed pub/sub that pushes messages from a topic to many subscribers (queues, Lambda, email, SMS, mobile push); pick it for alerts, notifications and fan-out.', url: 'https://aws.amazon.com/sns/' },
+  { name: 'Amazon Simple Queue Service (Amazon SQS)', category: 'Application Integration', lessonId: INT, inScope: true, summary: 'Managed message queue (standard or FIFO) that consumers pull from; pick it to decouple components and buffer work.', url: 'https://aws.amazon.com/sqs/' },
+  { name: 'AWS Step Functions', category: 'Application Integration', lessonId: INT, inScope: true, summary: 'Serverless workflow orchestration with visual state machines, branching and retries; pick it to coordinate multi-step processes across services.', url: 'https://aws.amazon.com/step-functions/' },
+  { name: 'Amazon Connect', category: 'Business Applications', lessonId: BIZ, inScope: true, summary: 'Omnichannel cloud contact centre (now documented as Amazon Connect Customer) for voice and chat with pay-as-you-go pricing; pick it to run a customer support centre.', url: 'https://aws.amazon.com/connect/' },
+  { name: 'Amazon Simple Email Service (Amazon SES)', category: 'Business Applications', lessonId: BIZ, inScope: true, summary: 'Email platform for sending and receiving transactional and marketing email from your own domains; pick it for application email at scale.', url: 'https://aws.amazon.com/ses/' },
+  { name: 'AWS CodeBuild', category: 'Developer Tools', lessonId: DEV, inScope: true, summary: 'Fully managed build service that compiles code, runs tests and produces artifacts without build servers; pick it for the build and test stage of CI/CD.', url: 'https://aws.amazon.com/codebuild/' },
+  { name: 'AWS CodePipeline', category: 'Developer Tools', lessonId: DEV, inScope: true, summary: 'Continuous delivery service that models and automates release stages (source, build, test, deploy); pick it to automate CI/CD.', url: 'https://aws.amazon.com/codepipeline/' },
+  { name: 'AWS X-Ray', category: 'Developer Tools', lessonId: DEV, inScope: true, summary: 'Distributed tracing service with a service map that shows where requests slow down or fail; pick it to troubleshoot microservice and serverless applications.', url: 'https://aws.amazon.com/xray/' },
+  { name: 'Amazon AppStream 2.0', category: 'End User Computing', lessonId: BIZ, inScope: true, summary: 'Application streaming service (now documented as Amazon WorkSpaces Applications) that runs desktop apps on AWS and streams them to any device; pick it to deliver specific applications.', url: 'https://aws.amazon.com/appstream2/' },
+  { name: 'Amazon WorkSpaces', category: 'End User Computing', lessonId: BIZ, inScope: true, summary: 'Managed virtual desktops (desktop as a service) for Windows and Linux, persistent or pooled; pick it to give users full cloud desktops.', url: 'https://aws.amazon.com/workspaces/' },
+  { name: 'Amazon WorkSpaces Secure Browser', category: 'End User Computing', lessonId: BIZ, inScope: true, summary: 'Managed, isolated browser sessions (formerly WorkSpaces Web) for reaching internal sites and SaaS apps without a VPN; AWS will stop accepting new customers from 29 October 2026.', url: 'https://aws.amazon.com/workspaces/secure-browser/' },
+  { name: 'AWS Amplify', category: 'Frontend Web and Mobile', lessonId: FIOT, inScope: true, summary: 'Toolkit and hosting service for frontend web and mobile developers to build, connect to a backend and deploy full-stack apps; pick it for Git-based hosting of web apps.', url: 'https://aws.amazon.com/amplify/' },
+  { name: 'AWS IoT Core', category: 'Internet of Things (IoT)', lessonId: FIOT, inScope: true, summary: 'Managed service that securely connects IoT devices to AWS using MQTT, with a device registry and rules to route data; pick it to connect and manage devices.', url: 'https://aws.amazon.com/iot-core/' },
+];

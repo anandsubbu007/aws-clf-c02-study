@@ -1,0 +1,60 @@
+import type { ServiceEntry } from '../../types';
+
+export const services: ServiceEntry[] = [
+  {
+    name: 'AWS Artifact',
+    category: 'Security, Identity, and Compliance',
+    summary: 'Self-service portal for on-demand AWS compliance reports (SOC, ISO, PCI) and for accepting agreements such as a BAA; pick it when auditors ask for AWS’s compliance evidence.',
+    lessonId: 'm02-compliance-and-governance',
+    inScope: true,
+    url: 'https://aws.amazon.com/artifact/',
+  },
+  {
+    name: 'AWS Certificate Manager (ACM)',
+    category: 'Security, Identity, and Compliance',
+    summary: 'Provisions, manages and renews public and private SSL/TLS certificates for integrated services such as load balancers and CloudFront; pick it for HTTPS without manual certificate handling.',
+    lessonId: 'm02-encryption-and-data-protection',
+    inScope: true,
+    url: 'https://aws.amazon.com/certificate-manager/',
+  },
+  {
+    name: 'AWS CloudHSM',
+    category: 'Security, Identity, and Compliance',
+    summary: 'Single-tenant hardware security modules in the AWS Cloud with customer-controlled keys; pick it when regulations or policy require dedicated HSMs that AWS cannot access.',
+    lessonId: 'm02-encryption-and-data-protection',
+    inScope: true,
+    url: 'https://aws.amazon.com/cloudhsm/',
+  },
+  {
+    name: 'AWS Key Management Service (AWS KMS)',
+    category: 'Security, Identity, and Compliance',
+    summary: 'Managed service to create and control encryption keys, integrated with many AWS services and logged in CloudTrail; pick it as the default way to manage keys for encryption at rest.',
+    lessonId: 'm02-encryption-and-data-protection',
+    inScope: true,
+    url: 'https://aws.amazon.com/kms/',
+  },
+  {
+    name: 'AWS CloudTrail',
+    category: 'Management and Governance',
+    summary: 'Records API and console activity (who did what, when and from where) for auditing and governance; pick it for security investigations and audit trails.',
+    lessonId: 'm02-logging-monitoring-auditing',
+    inScope: true,
+    url: 'https://aws.amazon.com/cloudtrail/',
+  },
+  {
+    name: 'Amazon CloudWatch',
+    category: 'Management and Governance',
+    summary: 'Monitoring service for metrics, logs, alarms and dashboards; pick it to watch performance and health and to alert when thresholds are breached.',
+    lessonId: 'm02-logging-monitoring-auditing',
+    inScope: true,
+    url: 'https://aws.amazon.com/cloudwatch/',
+  },
+  {
+    name: 'AWS Config',
+    category: 'Management and Governance',
+    summary: 'Records resource configurations and their history and evaluates them against rules; pick it to audit configuration changes and check continuous compliance.',
+    lessonId: 'm02-logging-monitoring-auditing',
+    inScope: true,
+    url: 'https://aws.amazon.com/config/',
+  },
+];

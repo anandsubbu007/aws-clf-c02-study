@@ -1,0 +1,17 @@
+import type { ServiceEntry } from '../../types';
+
+const CAT = 'Networking and Content Delivery';
+
+export const services: ServiceEntry[] = [
+  { name: 'Amazon VPC', category: CAT, summary: 'A logically isolated virtual network in an AWS Region with subnets, route tables and gateways; the foundation for placing almost any resource privately.', lessonId: 'm08-vpc-fundamentals', inScope: true, url: 'https://aws.amazon.com/vpc/' },
+  { name: 'AWS PrivateLink', category: CAT, summary: 'Private connectivity between VPCs and services over the AWS network using interface endpoints; pick it to expose or consume a single service without the internet.', lessonId: 'm08-vpc-fundamentals', inScope: true, url: 'https://aws.amazon.com/privatelink/' },
+  { name: 'Amazon Route 53', category: CAT, summary: 'Scalable DNS service that also registers domains and runs health checks; pick it for DNS and for latency, weighted, failover or geolocation routing.', lessonId: 'm08-dns-and-content-delivery', inScope: true, url: 'https://aws.amazon.com/route53/' },
+  { name: 'Amazon CloudFront', category: CAT, summary: 'Content delivery network that caches content at edge locations close to viewers; pick it to speed up websites, media and APIs for global users.', lessonId: 'm08-dns-and-content-delivery', inScope: true, url: 'https://aws.amazon.com/cloudfront/' },
+  { name: 'AWS Global Accelerator', category: CAT, summary: 'Provides static anycast IP addresses and routes TCP/UDP traffic over the AWS global network to healthy endpoints; pick it for non-cacheable global apps needing fixed IPs or fast failover.', lessonId: 'm08-dns-and-content-delivery', inScope: true, url: 'https://aws.amazon.com/global-accelerator/' },
+  { name: 'Amazon API Gateway', category: CAT, summary: 'Managed service to create, publish, secure and monitor REST, HTTP and WebSocket APIs; pick it as the front door for serverless or HTTP backends.', lessonId: 'm08-dns-and-content-delivery', inScope: true, url: 'https://aws.amazon.com/api-gateway/' },
+  { name: 'AWS VPN', category: CAT, summary: 'The family of AWS virtual private network services, made up of AWS Site-to-Site VPN and AWS Client VPN; pick it for encrypted connectivity over the internet.', lessonId: 'm08-connectivity-options', inScope: true, url: 'https://aws.amazon.com/vpn/' },
+  { name: 'AWS Site-to-Site VPN', category: CAT, summary: 'IPsec-encrypted tunnels over the internet between an on-premises network and AWS; pick it for quick, low-cost encrypted connectivity or a Direct Connect backup.', lessonId: 'm08-connectivity-options', inScope: true, url: 'https://aws.amazon.com/vpn/site-to-site-vpn/' },
+  { name: 'AWS Client VPN', category: CAT, summary: 'Managed remote-access VPN that lets individual users securely reach AWS and on-premises resources with an OpenVPN-based client.', lessonId: 'm08-connectivity-options', inScope: true, url: 'https://aws.amazon.com/vpn/client-vpn/' },
+  { name: 'AWS Direct Connect', category: CAT, summary: 'Dedicated private network connection from your premises to AWS; pick it for consistent performance and high bandwidth, adding MACsec or a VPN if encryption is required.', lessonId: 'm08-connectivity-options', inScope: true, url: 'https://aws.amazon.com/directconnect/' },
+  { name: 'AWS Transit Gateway', category: CAT, summary: 'A hub-and-spoke network hub that interconnects many VPCs and on-premises networks; pick it instead of a mesh of VPC peering connections.', lessonId: 'm08-connectivity-options', inScope: true, url: 'https://aws.amazon.com/transit-gateway/' },
+];

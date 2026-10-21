@@ -1,0 +1,60 @@
+import type { ServiceEntry } from '../../types';
+
+export const services: ServiceEntry[] = [
+  {
+    name: 'AWS Well-Architected Tool',
+    category: 'Management and Governance',
+    summary: 'Guides you through reviewing a workload against the six Well-Architected pillars, flags risks and tracks improvements with milestones; pick it for structured architecture reviews.',
+    lessonId: 'm01-well-architected-framework',
+    inScope: true,
+    url: 'https://aws.amazon.com/well-architected-tool/',
+  },
+  {
+    name: 'AWS License Manager',
+    category: 'Management and Governance',
+    summary: 'Tracks and controls software licence usage (including BYOL) across AWS accounts and Regions to limit overages and support audits; pick it when licence compliance is the concern.',
+    lessonId: 'm01-cloud-economics',
+    inScope: true,
+    url: 'https://aws.amazon.com/license-manager/',
+  },
+  {
+    name: 'AWS Application Discovery Service',
+    category: 'Migration and Transfer',
+    summary: 'Collects configuration, utilisation and dependency data about on-premises servers and databases to plan a migration; pick it for the discovery step. It closed to new customers on 7 November 2025 (AWS Transform is the named alternative).',
+    lessonId: 'm01-adoption-and-migration',
+    inScope: true,
+    url: 'https://aws.amazon.com/application-discovery/',
+  },
+  {
+    name: 'AWS Application Migration Service',
+    category: 'Migration and Transfer',
+    summary: 'Rehosts (lift and shift) physical, virtual and cloud servers on AWS using continuous block-level replication with minimal downtime; AWS now presents it as AWS Transform MGN.',
+    lessonId: 'm01-adoption-and-migration',
+    inScope: true,
+    url: 'https://aws.amazon.com/application-migration-service/',
+  },
+  {
+    name: 'Migration Evaluator',
+    category: 'Migration and Transfer',
+    summary: 'Builds a data-driven business case for migrating to AWS from your on-premises footprint, including cost scenarios and licensing insights; pick it before you migrate.',
+    lessonId: 'm01-adoption-and-migration',
+    inScope: true,
+    url: 'https://aws.amazon.com/migration-evaluator/',
+  },
+  {
+    name: 'AWS Migration Hub',
+    category: 'Migration and Transfer',
+    summary: 'A single place to discover servers, plan migrations and track the status of each application migration across migration tools; AWS Transform is its named alternative for new customers.',
+    lessonId: 'm01-adoption-and-migration',
+    inScope: true,
+    url: 'https://docs.aws.amazon.com/migrationhub/latest/ug/whatishub.html',
+  },
+  {
+    name: 'AWS Snow Family',
+    category: 'Migration and Transfer',
+    summary: 'Physical devices for offline, large-scale data transfer; not in the CLF-C02 scope and AWS will discontinue Snowball support in commercial Regions on 31 December 2026.',
+    lessonId: 'm01-adoption-and-migration',
+    inScope: false,
+    url: 'https://aws.amazon.com/snowball/',
+  },
+];

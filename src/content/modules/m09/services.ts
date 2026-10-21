@@ -1,0 +1,68 @@
+import type { ServiceEntry } from '../../types';
+
+export const services: ServiceEntry[] = [
+  {
+    name: 'Amazon S3',
+    category: 'Storage',
+    summary: 'Virtually unlimited, highly durable object storage in buckets; pick it for backups, data lakes, media, static websites and archives, choosing a storage class by access pattern.',
+    lessonId: 'm09-s3-and-storage-classes',
+    inScope: true,
+    url: 'https://aws.amazon.com/s3/',
+  },
+  {
+    name: 'Amazon S3 Glacier',
+    category: 'Storage',
+    summary: 'The S3 Glacier archive storage classes (Instant Retrieval, Flexible Retrieval, Deep Archive); pick them for low-cost long-term retention of rarely accessed data.',
+    lessonId: 'm09-s3-and-storage-classes',
+    inScope: true,
+    url: 'https://aws.amazon.com/s3/storage-classes/glacier/',
+  },
+  {
+    name: 'Amazon Elastic Block Store (Amazon EBS)',
+    category: 'Storage',
+    summary: 'Persistent block storage volumes for EC2 instances, scoped to one Availability Zone and protected with snapshots; pick it for boot volumes and databases on EC2.',
+    lessonId: 'm09-block-storage',
+    inScope: true,
+    url: 'https://aws.amazon.com/ebs/',
+  },
+  {
+    name: 'Amazon Elastic File System (Amazon EFS)',
+    category: 'Storage',
+    summary: 'Fully managed, elastic NFS file system that many Linux instances across Availability Zones can share; pick it for shared Linux file storage with no capacity planning.',
+    lessonId: 'm09-file-and-hybrid-storage',
+    inScope: true,
+    url: 'https://aws.amazon.com/efs/',
+  },
+  {
+    name: 'Amazon FSx',
+    category: 'Storage',
+    summary: 'Family of managed file systems (Windows File Server, NetApp ONTAP, OpenZFS and Lustre); pick it to lift and shift file-server workloads such as Windows SMB shares.',
+    lessonId: 'm09-file-and-hybrid-storage',
+    inScope: true,
+    url: 'https://aws.amazon.com/fsx/',
+  },
+  {
+    name: 'AWS Storage Gateway',
+    category: 'Storage',
+    summary: 'Hybrid gateway giving on-premises applications cached access to AWS storage through file, volume and tape interfaces; pick it to integrate local environments with S3 and other AWS storage.',
+    lessonId: 'm09-file-and-hybrid-storage',
+    inScope: true,
+    url: 'https://aws.amazon.com/storagegateway/',
+  },
+  {
+    name: 'AWS Backup',
+    category: 'Storage',
+    summary: 'Central, policy-based backup service across AWS services using backup plans and vaults; pick it to automate and audit backups and retention in one place.',
+    lessonId: 'm09-backup-and-disaster-recovery',
+    inScope: true,
+    url: 'https://aws.amazon.com/backup/',
+  },
+  {
+    name: 'AWS Elastic Disaster Recovery',
+    category: 'Storage',
+    summary: 'Continuously replicates on-premises or cloud servers to AWS so they can be launched quickly after an outage; pick it for low-RTO and low-RPO server recovery.',
+    lessonId: 'm09-backup-and-disaster-recovery',
+    inScope: true,
+    url: 'https://aws.amazon.com/disaster-recovery/',
+  },
+];

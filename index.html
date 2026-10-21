@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Interactive study hub for the AWS Certified Cloud Practitioner (CLF-C02) exam: lessons, quizzes, flashcards and mock exams." />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>CLF-C02 Study Hub</title>
+    <script>
+      (function () {
+        try {
+          var s = JSON.parse(localStorage.getItem('clf-c02-theme') || 'null');
+          var t = s || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

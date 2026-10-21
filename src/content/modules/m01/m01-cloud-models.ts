@@ -1,0 +1,241 @@
+import type { Lesson } from '../../types';
+
+export const lesson: Lesson = {
+  id: 'm01-cloud-models',
+  title: 'Cloud service models and deployment models',
+  topic: 'Cloud computing models',
+  subtopic: 'IaaS, PaaS, SaaS and cloud / hybrid / on-premises deployment',
+  taskStatements: ['3.1', '2.1'],
+  minutes: 13,
+  keywords: ['IaaS', 'PaaS', 'SaaS', 'infrastructure as a service', 'platform as a service', 'software as a service', 'hybrid cloud', 'private cloud', 'on-premises', 'deployment models', 'cloud-native', 'multicloud'],
+  objectives: [
+    'Describe IaaS, PaaS and SaaS and say who manages which layer in each model.',
+    'Describe the three deployment models the exam names: cloud, hybrid and on-premises (private cloud).',
+    'Match a scenario to the right service model or deployment model, including common AWS examples.',
+    'Explain how the shared responsibility model shifts as you move from IaaS toward SaaS.',
+  ],
+  explanation: [
+    'Cloud computing is described along two independent axes. The **service model** answers “how much of the stack do I manage versus the provider?” The **deployment model** answers “where does the workload run?” Exam questions often hide one of these in a scenario, so first decide which axis the question is really about.',
+    '**Infrastructure as a Service (IaaS)** gives you the basic building blocks: virtual or dedicated compute, storage and networking. You get the most flexibility and control, and you also keep the most work, because you install, configure and patch the operating system and everything above it. On AWS, Amazon EC2 together with Amazon VPC and Amazon EBS is the classic IaaS example. **Platform as a Service (PaaS)** removes the need to manage the underlying hardware and operating system so you can concentrate on deploying and running your application and its data; AWS Elastic Beanstalk is the usual example. **Software as a Service (SaaS)** is a finished application run and managed by the vendor; you only use it and configure your own data and users. Amazon Connect (a cloud contact centre) is a commonly cited example.',
+    'AWS itself says it prefers to talk about solutions rather than rigid labels, and many services sit between the traditional categories. A managed database such as Amazon RDS, or a serverless service such as AWS Lambda, takes more of the stack off your plate than EC2 does without being a finished application. For the exam, read the **degree of management** described in the scenario: “we manage the OS and patches” points to IaaS-style control, “we only deploy code” points to PaaS-style, and “we just use the application” points to SaaS.',
+    'The three **deployment models** in the exam guide are **cloud**, **hybrid** and **on-premises**. A **cloud** deployment runs all parts of the application on a cloud provider; it may have been built there or migrated there. An **on-premises** deployment (AWS also calls it a *private cloud*) keeps resources in your own data centre, often using virtualisation and resource-management tools to raise utilisation; it brings few of the benefits of cloud computing but can be chosen for dedicated resources or strict control. A **hybrid** deployment connects cloud resources to existing on-premises resources so the two work as one environment, commonly to extend a data centre into the cloud during a gradual migration.',
+    'Hybrid designs rely on connectivity and consistent tooling: AWS Site-to-Site VPN or AWS Direct Connect link networks, AWS Storage Gateway presents cloud storage to on-premises applications, and AWS Outposts places AWS-managed infrastructure in your own facility. Each is taught in detail in later modules; here you only need to recognise them as the building blocks of a hybrid deployment.',
+    'The service model also decides your **security and operational responsibilities**. Under the shared responsibility model AWS is always responsible for security *of* the cloud (facilities, hardware, host software, global network). As you move from IaaS toward SaaS, AWS or the vendor takes over more layers, and your remaining responsibility concentrates on your **data**, **identity and access**, and how you configure the service.',
+  ],
+  analogy:
+    'Think of getting dinner. IaaS is renting a fully equipped kitchen: you bring ingredients, cook and clean. PaaS is a meal-kit service: the kitchen and prep work are handled, you finish the dish. SaaS is eating at a restaurant: you choose from the menu and enjoy it. Deployment is where you eat: cooking at home only (on-premises), always at restaurants (cloud), or a mix such as cooking at home on weekdays and ordering in for big parties (hybrid).',
+  example:
+    'A regional bank must keep its core ledger database in its own data centre for regulatory reasons, but wants the public website, mobile back end and analytics in AWS. It connects its data centre to a VPC over AWS Direct Connect with a VPN backup (a **hybrid** deployment). The web tier runs on EC2 instances the bank patches itself (IaaS), the mobile API runs on AWS Elastic Beanstalk so developers just upload code (PaaS), and employees use a hosted SaaS tool for customer support, which the vendor patches and operates.',
+  deepDives: [
+    {
+      title: 'Where the responsibility line moves',
+      body: [
+        'In every model AWS secures the physical facilities, hardware and the foundation services. With **EC2 (IaaS)** you manage the guest operating system, patches, firewall rules in security groups, your application and your data. With a **managed service such as Amazon RDS**, AWS takes over operating-system and database-engine patching and backups mechanics, while you still manage data, access control, network exposure and configuration choices. With a **SaaS** product the vendor runs the application and infrastructure, and you manage users, permissions and the data you put in.',
+        'Whatever the model, data classification, identity and access management, and legal compliance for your own data stay with you. This is why “the provider manages it” never means “nobody needs to think about security”.',
+      ],
+    },
+    {
+      title: 'Cloud-native vs lift-and-shift in a “cloud” deployment',
+      body: [
+        'A cloud deployment can be **cloud-native** (designed from the start for managed services, scaling and automation) or **migrated** from existing infrastructure. Both count as cloud deployments. Migrated workloads may keep an IaaS style (rehost) and then be modernised later toward managed or serverless services. The migration strategies are covered in the adoption and migration lesson.',
+      ],
+    },
+    {
+      title: 'Why on-premises is not simply “bad”',
+      body: [
+        'On-premises or private deployments can be justified by data-residency rules, very low-latency links to local equipment, or sunk investment in hardware. The trade-off is that you carry procurement, capacity planning, maintenance and refresh yourself and you do not get cloud elasticity or pay-as-you-go pricing. Exam questions usually frame on-premises as the baseline the cloud is compared against.',
+      ],
+    },
+  ],
+  howItWorks: [
+    '**IaaS:** you launch resources such as EC2 instances, attach EBS volumes and design the VPC network; you choose the operating system and install and patch software.',
+    '**PaaS:** you hand over your application code or container and settings; the platform provisions and manages the servers, scaling and operating system patching for you.',
+    '**SaaS:** you sign up and configure users and data in an application that the vendor hosts, updates and scales.',
+    '**Cloud deployment:** all components run in AWS and are reached through the console, CLI or API; you design for multiple Availability Zones and Regions as needed.',
+    '**Hybrid deployment:** a private network connection (VPN or Direct Connect) joins your data centre to a VPC, and tools such as Storage Gateway or Outposts extend AWS capabilities on premises.',
+  ],
+  whenToUse: [
+    'Choose IaaS-style services when you need full control of the operating system, custom software stacks or lift-and-shift of existing servers.',
+    'Choose PaaS or managed and serverless services when the goal is to ship features quickly and minimise operational work such as patching and capacity management.',
+    'Choose SaaS when a commodity business capability (email, contact centre, CRM) is better bought than built.',
+    'Choose a hybrid deployment when some workloads must stay on premises (regulation, latency, existing investment) or when migrating in phases.',
+  ],
+  limitations: [
+    'More control (IaaS) means more operational burden: you must patch, scale, back up and secure everything above the hypervisor.',
+    'SaaS and PaaS give less customisation and can create dependence on the vendor’s features, release schedule and data-export options.',
+    'Hybrid deployments add complexity: you manage connectivity, identity across environments, latency between sites and two sets of operations.',
+    'The IaaS/PaaS/SaaS labels are traditional industry terms; many AWS services do not fit neatly into one box, so exam answers should rely on the described level of management rather than a memorised label.',
+  ],
+  keyTerms: [
+    { term: 'IaaS', definition: 'Infrastructure as a Service: basic building blocks (compute, storage, networking) with the highest flexibility and management control; example Amazon EC2.' },
+    { term: 'PaaS', definition: 'Platform as a Service: the provider manages the underlying infrastructure and operating system so you focus on your application; example AWS Elastic Beanstalk.' },
+    { term: 'SaaS', definition: 'Software as a Service: a complete application run and managed by the vendor; you only use it. Example: Amazon Connect.' },
+    { term: 'Cloud deployment', definition: 'A deployment in which all parts of the application run in the cloud, whether built there or migrated there.' },
+    { term: 'On-premises (private cloud)', definition: 'Resources deployed in your own data centre, often with virtualisation tooling; few cloud benefits but dedicated control.' },
+    { term: 'Hybrid deployment', definition: 'Connecting cloud-based resources with existing non-cloud (usually on-premises) resources so they work together.' },
+    { term: 'Cloud-native', definition: 'An application designed from the start to use cloud capabilities such as managed services, automatic scaling and automation.' },
+    { term: 'Undifferentiated heavy lifting', definition: 'Routine infrastructure work (racking servers, patching, capacity planning) that does not distinguish your business; higher-level models reduce it.' },
+  ],
+  related: [
+    { lessonId: 'm02-shared-responsibility', why: 'Explains exactly which security tasks belong to AWS and which to the customer.' },
+    { lessonId: 'm01-adoption-and-migration', why: 'Rehost, replatform and refactor decide how far a workload moves from IaaS toward managed services.' },
+    { lessonId: 'm08-connectivity-options', why: 'VPN and Direct Connect are the usual links in a hybrid deployment.' },
+    { lessonId: 'm05-global-infrastructure', why: 'AWS Outposts extends AWS infrastructure into your own facility for hybrid designs.' },
+    { lessonId: 'm09-file-and-hybrid-storage', why: 'AWS Storage Gateway bridges on-premises applications and cloud storage.' },
+  ],
+  mistakes: [
+    'Using “hybrid” to mean “uses several AWS services”. Hybrid means cloud resources connected to resources that are **not** in the cloud (usually on premises).',
+    'Assuming SaaS or managed services remove all customer responsibility. The customer always keeps responsibility for data, identity and access, and configuration.',
+    'Believing that **cloud** deployment means every application must be built from scratch. Migrated applications are still cloud deployments.',
+    'Memorising “EC2 = IaaS, everything else = PaaS”. Judge by how much of the stack the customer manages in the scenario.',
+  ],
+  examTips: [
+    'Keywords: “full control of the operating system”, “most flexibility” → IaaS; “focus only on the application / deploy code without managing servers” → PaaS; “use a finished application managed by the vendor” → SaaS.',
+    'Keywords: “connect on-premises data centre to AWS and use both” → hybrid deployment; “run everything in the data centre with virtualisation” → on-premises (private cloud); “all resources run in AWS” → cloud.',
+    'On the shared responsibility questions, the customer always owns **data** and **who can access it**, even for SaaS; AWS always owns the **physical infrastructure** and global network.',
+    'The exam guide’s deployment models are cloud, hybrid and on-premises. If an answer lists “public cloud / private cloud / hybrid cloud”, the AWS-style meaning of private cloud is on-premises.',
+  ],
+  comparisons: [
+    {
+      title: 'IaaS vs PaaS vs SaaS',
+      headers: ['Aspect', 'IaaS', 'PaaS', 'SaaS'],
+      rows: [
+        ['What you get', 'Compute, storage, networking building blocks', 'A managed platform to run your application', 'A finished application'],
+        ['Customer manages', 'OS, patches, middleware, app, data', 'Application and its data, configuration', 'Users, permissions, own data and settings'],
+        ['Provider manages', 'Facilities, hardware, virtualisation', 'Infrastructure plus OS/runtime', 'Everything underneath and the application'],
+        ['Flexibility', 'Highest', 'Medium', 'Lowest'],
+        ['AWS-style example', 'Amazon EC2, Amazon VPC, Amazon EBS', 'AWS Elastic Beanstalk', 'Amazon Connect (commonly cited)'],
+      ],
+    },
+    {
+      title: 'Deployment models',
+      headers: ['Model', 'Where resources run', 'Typical reason', 'Example on AWS'],
+      rows: [
+        ['Cloud', 'Entirely in the cloud', 'Agility, elasticity, no data centre to run', 'A web application hosted only on AWS'],
+        ['Hybrid', 'Cloud plus on-premises, connected', 'Regulation, latency, phased migration', 'Data centre linked to a VPC with Direct Connect or Site-to-Site VPN; Storage Gateway; Outposts'],
+        ['On-premises (private cloud)', 'Only in your own data centre', 'Dedicated control, existing hardware', 'Virtualised servers in your own facility with no AWS use'],
+      ],
+    },
+  ],
+  memoryAids: [
+    'Control ladder: **I**aaS = **I** manage the **I**nfrastructure software stack; **P**aaS = I manage the **P**rogram (app); **S**aaS = I just **S**it and use it.',
+    'Hybrid = **H**ere **and** there: some resources in the cloud, some at home, **H**ooked together.',
+  ],
+  revision: [
+    'Two axes: service model (how much you manage) and deployment model (where it runs).',
+    'IaaS = most control and most work; PaaS = focus on the app; SaaS = just use the finished software.',
+    'Deployment models in the exam guide: cloud, hybrid, on-premises (private cloud).',
+    'Hybrid connects cloud and on-premises resources, for example with Site-to-Site VPN, Direct Connect, Storage Gateway or Outposts.',
+    'Customers always remain responsible for their data and access, even with SaaS.',
+  ],
+  diagrams: [
+    {
+      id: 'responsibility-columns',
+      type: 'columns',
+      title: 'Who manages what as you move up the models',
+      caption: 'General pattern; exact boundaries vary by service.',
+      columns: [
+        { heading: 'IaaS (e.g. EC2)', items: ['Customer: data, access, application, OS, patches, firewall configuration', 'AWS: virtualisation, hardware, facilities, network'] },
+        { heading: 'PaaS / managed (e.g. Elastic Beanstalk, RDS)', items: ['Customer: application or data, access control, configuration', 'AWS: OS and platform patching, infrastructure'] },
+        { heading: 'SaaS (e.g. Amazon Connect)', items: ['Customer: users, permissions, own data and settings', 'Vendor: application, platform and infrastructure'] },
+      ],
+    },
+    {
+      id: 'deployment-mindmap',
+      type: 'mindmap',
+      title: 'Deployment models',
+      center: 'Where does the workload run?',
+      branches: [
+        { label: 'Cloud', detail: 'All parts run in the cloud.', items: ['Built in the cloud or migrated', 'Pay-as-you-go, elastic'] },
+        { label: 'Hybrid', detail: 'Cloud connected to resources that stay on premises.', items: ['Site-to-Site VPN or Direct Connect', 'Storage Gateway', 'AWS Outposts'] },
+        { label: 'On-premises (private cloud)', detail: 'Everything stays in your own data centre.', items: ['Virtualisation and management tools', 'Few cloud benefits, dedicated control'] },
+      ],
+    },
+  ],
+  references: [
+    { title: 'Types of cloud computing (AWS)', url: 'https://aws.amazon.com/types-of-cloud-computing/' },
+    { title: 'AWS Overview: Types of cloud computing and deployment models', url: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview/types-of-cloud-computing.html' },
+    { title: 'AWS shared responsibility model', url: 'https://aws.amazon.com/compliance/shared-responsibility-model/' },
+    { title: 'AWS hybrid and multicloud solutions', url: 'https://aws.amazon.com/hybrid-multicloud/' },
+  ],
+  knowledgeCheck: [
+    {
+      id: 'm01-cloud-models-k1',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.1',
+      difficulty: 'easy',
+      stem: 'A company connects its existing data centre to AWS so that some workloads run in each location and operate together. Which deployment model is this?',
+      options: [
+        { id: 'a', text: 'On-premises (private cloud)', explanation: 'On-premises means everything stays in your own data centre; here AWS resources are used as well, so it is not purely on premises.' },
+        { id: 'b', text: 'Hybrid', explanation: 'Correct. A hybrid deployment connects cloud-based resources with existing resources that are not in the cloud, usually on premises.' },
+        { id: 'c', text: 'Cloud', explanation: 'A cloud deployment has all parts of the application running in the cloud; keeping workloads in the data centre makes this hybrid instead.' },
+        { id: 'd', text: 'Software as a Service', explanation: 'SaaS is a service model describing a vendor-managed application, not a deployment model describing where workloads run.' },
+      ],
+      correct: ['b'],
+    },
+    {
+      id: 'm01-cloud-models-k2',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.1',
+      difficulty: 'easy',
+      stem: 'Which cloud service model gives the customer the highest level of flexibility and management control over its IT resources?',
+      options: [
+        { id: 'a', text: 'Software as a Service', explanation: 'SaaS gives the least control because the vendor runs and manages the whole application; the customer only uses it.' },
+        { id: 'b', text: 'Platform as a Service', explanation: 'PaaS lets you focus on the application while the provider manages the platform, so you have less control than with raw infrastructure.' },
+        { id: 'c', text: 'Infrastructure as a Service', explanation: 'Correct. IaaS provides basic building blocks such as compute, storage and networking, leaving the operating system and everything above it under your control.' },
+        { id: 'd', text: 'Function as a Service', explanation: 'Function-based serverless offerings such as AWS Lambda hide servers from you, so they give less infrastructure control than IaaS.' },
+      ],
+      correct: ['c'],
+    },
+  ],
+  practice: [
+    {
+      id: 'm01-cloud-models-p1',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.1',
+      difficulty: 'medium',
+      stem: 'A development team wants to deploy a web application by uploading code, while AWS handles provisioning, load balancing, scaling and operating-system patching of the underlying servers. Which model best describes this approach?',
+      options: [
+        { id: 'a', text: 'Platform as a Service', explanation: 'Correct. PaaS removes the need to manage the underlying infrastructure and operating system so the team concentrates on deploying and managing the application, as with AWS Elastic Beanstalk.' },
+        { id: 'b', text: 'Infrastructure as a Service', explanation: 'With IaaS the team would launch and patch the servers itself, which is exactly the work the scenario wants to avoid.' },
+        { id: 'c', text: 'On-premises private cloud', explanation: 'This is a deployment model that keeps resources in your own data centre; it does not describe handing server management to AWS.' },
+        { id: 'd', text: 'Hybrid deployment', explanation: 'Hybrid describes connecting cloud and on-premises resources; the scenario says nothing about on-premises systems.' },
+      ],
+      correct: ['a'],
+    },
+    {
+      id: 'm01-cloud-models-p2',
+      type: 'single',
+      domain: 2,
+      taskStatement: '2.1',
+      difficulty: 'medium',
+      stem: 'A company moves from running its own mail servers on EC2 instances to a fully managed, vendor-hosted email service (SaaS). Which responsibility remains with the company after the move?',
+      options: [
+        { id: 'a', text: 'Patching the operating system of the mail servers', explanation: 'With a SaaS email service the vendor operates the servers and their operating systems, so this task no longer belongs to the customer.' },
+        { id: 'b', text: 'Maintaining the physical data centre hosting the service', explanation: 'Physical facilities are always the provider’s responsibility in the cloud and are certainly not the customer’s in a SaaS model.' },
+        { id: 'c', text: 'Upgrading the mail application to new versions', explanation: 'In SaaS the vendor delivers feature updates and upgrades; the customer does not install them.' },
+        { id: 'd', text: 'Managing user accounts, permissions and the content of its mailboxes', explanation: 'Correct. Even with SaaS the customer controls who has access and is responsible for its own data and how the service is configured.' },
+      ],
+      correct: ['d'],
+    },
+    {
+      id: 'm01-cloud-models-p3',
+      type: 'multi',
+      domain: 3,
+      taskStatement: '3.1',
+      difficulty: 'hard',
+      stem: 'A hospital must keep patient imaging archives in its own data centre, but wants to use AWS for analytics and a patient portal and to link the two environments. Which TWO services or capabilities help build this hybrid deployment? (Select TWO.)',
+      options: [
+        { id: 'a', text: 'AWS Elastic Beanstalk', explanation: 'Elastic Beanstalk deploys and runs web applications in AWS; it does not itself connect an on-premises data centre to AWS.' },
+        { id: 'b', text: 'AWS Direct Connect', explanation: 'Correct. Direct Connect provides a dedicated private network connection between an on-premises facility and AWS, a common backbone for hybrid designs.' },
+        { id: 'c', text: 'AWS Storage Gateway', explanation: 'Correct. Storage Gateway lets on-premises applications use AWS cloud storage through familiar protocols, bridging the two environments.' },
+        { id: 'd', text: 'Amazon Connect', explanation: 'Amazon Connect is a cloud contact-centre service (SaaS); it does not connect data centres to AWS.' },
+        { id: 'e', text: 'AWS License Manager', explanation: 'License Manager helps you track and limit software licence usage; it is not a network connection or a storage bridge.' },
+      ],
+      correct: ['b', 'c'],
+    },
+  ],
+};

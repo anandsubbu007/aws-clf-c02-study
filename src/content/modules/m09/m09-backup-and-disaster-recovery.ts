@@ -1,0 +1,281 @@
+import type { Lesson } from '../../types';
+
+export const lesson: Lesson = {
+  id: 'm09-backup-and-disaster-recovery',
+  title: 'AWS Backup and disaster recovery',
+  topic: 'AWS storage services',
+  subtopic: 'Backup, recovery and resilience',
+  taskStatements: ['3.6'],
+  minutes: 16,
+  keywords: ['AWS Backup', 'backup plan', 'backup vault', 'Elastic Disaster Recovery', 'DRS', 'CloudEndure', 'disaster recovery', 'RTO', 'RPO', 'pilot light', 'warm standby', 'multi-site', 'active-active', 'backup and restore', 'lifecycle', 'cold storage', 'failover', 'failback'],
+  objectives: [
+    'Explain what AWS Backup does and describe backup plans, rules, vaults and resource assignment.',
+    'Describe AWS Elastic Disaster Recovery and when to use it instead of simple backups.',
+    'Define RTO and RPO and use them to choose between backup and restore, pilot light, warm standby and multi-site active/active.',
+    'Recognise lifecycle policies (S3 Lifecycle and AWS Backup lifecycle) as tools for retention and cost control.',
+  ],
+  explanation: [
+    'A backup is a copy of data you can restore after deletion, corruption or failure. In AWS, many services already create their own backups (EBS snapshots, RDS snapshots, DynamoDB backups, EFS backups), but managing each one separately is slow and error-prone. **AWS Backup** is a fully managed service that **centralises and automates data protection across AWS services** (and some on-premises resources) from one place, using **policy-based** rules instead of custom scripts.',
+    'In AWS Backup you create a **backup plan**: a policy made of one or more **rules** that define *how often* to back up (schedule), the backup window, **when to transition backups to cold storage and when to delete them (lifecycle)**, and optionally where to **copy** them (another Region or account). You then **assign resources** to the plan, individually or by **tag** (for example everything tagged `backup=daily`). Recovery points are stored in an encrypted **backup vault**, and the service offers a central console for monitoring, cross-Region and cross-account copies, and reporting through AWS Backup Audit Manager for compliance evidence. This is the answer when the question says “centrally manage and automate backups across services”.',
+    '**Disaster recovery (DR)** goes beyond backups: it is the plan and tooling for getting a workload running again after a major event such as an Availability Zone, Region or data-centre outage. Two numbers drive every DR decision. The **Recovery Time Objective (RTO)** is how long the business can be down: the time from disruption to restored service. The **Recovery Point Objective (RPO)** is how much data loss is acceptable, measured as time: the age of the newest recoverable data. A tiny RPO needs continuous or very frequent replication; a tiny RTO needs resources that are already running or can start almost instantly.',
+    'The AWS Well-Architected guidance describes four DR strategies, ranging from low cost and slow to expensive and fast. **Backup and restore:** keep backups (possibly copied to another Region) and rebuild the infrastructure when needed; cheapest, longest recovery. **Pilot light:** data is replicated and a minimal core of the environment (such as the database) is always on, while application servers are “switched off” until needed. **Warm standby:** a scaled-down but fully functional copy runs in another Region and is scaled up on failover. **Multi-site active/active:** the workload runs in multiple Regions at once and serves traffic from all of them; the most complex and costly, with recovery time near zero.',
+    '**AWS Elastic Disaster Recovery (AWS DRS)** is the service for recovering whole servers and applications. It **continuously replicates** your source servers (physical, virtual or cloud-based) to a low-cost staging area in your AWS account, so you pay for modest storage and minimal compute until you need it. When disaster strikes (or for a drill), it launches recovery instances in AWS, using the latest state or a point in time, typically within minutes, and you can later fail back to the original site. It targets a low RPO and low RTO without running a full duplicate environment. Finally, remember **lifecycle policies** as the cost lever: S3 Lifecycle rules transition and expire objects, and AWS Backup lifecycle rules move recovery points to cold storage and delete them when retention ends.',
+  ],
+  analogy:
+    'Backup and restore is keeping photocopies of important papers in a safe: cheap, but if the office burns down you have to find a new office and set it up before you can work. Pilot light is renting a small office with only the phones and filing cabinets ready. Warm standby is a smaller, fully staffed second office ready to expand. Active/active is running two full offices at once so customers never notice if one closes. AWS Backup is the company-wide records manager who photocopies everything on a schedule; Elastic Disaster Recovery keeps a live mirror of your servers ready to switch on.',
+  example:
+    'A retailer tags every production EBS volume, EFS file system, DynamoDB table and RDS database with `backup=daily`. One AWS Backup plan backs them up every night, moves recovery points to cold storage after a month, deletes them after a year, and copies them to a second Region. Its legacy on-premises order-processing servers are protected with AWS Elastic Disaster Recovery, which replicates them continuously; during a yearly drill the team launches them in AWS in minutes. The customer-facing website runs a warm standby in another Region so that traffic can be shifted quickly.',
+  deepDives: [
+    {
+      title: 'RTO vs RPO with a timeline',
+      body: [
+        'Picture a timeline: the **last good copy of data** (point A), then the **disaster** (point B), then **service restored** (point C). The gap A→B is the data you lose, bounded by the **RPO**. The gap B→C is the downtime, bounded by the **RTO**.',
+        'To shrink RPO you replicate or back up more often (continuous replication is best). To shrink RTO you pre-provision more of the environment (pilot light, warm standby, active/active). Both cost money, so the business must decide what each hour of downtime or data loss is worth.',
+        'A way to remember it: **RTO = Time to recover (downtime)**, **RPO = Point to recover to (data age)**.',
+      ],
+    },
+    {
+      title: 'The four DR strategies side by side',
+      body: [
+        '**Backup and restore:** data is backed up (and can be replicated to another Region); infrastructure, configuration and code are redeployed, ideally with infrastructure as code such as CloudFormation. Suitable for lower-priority workloads and tolerates the longest RTO and RPO.',
+        '**Pilot light:** the data layer is replicated and always on; compute is provisioned but off, or created on demand when failover happens. The key difference from warm standby: it cannot process requests until further steps are taken.',
+        '**Warm standby:** a reduced-size but fully functional copy is always running and can handle traffic after scaling up, so recovery is faster and easier to test continuously.',
+        '**Multi-site active/active:** all Regions serve users; failure of one Region needs little or no recovery, but you must handle data replication, consistency and cost across Regions.',
+        'The strategy you choose depends on RTO, RPO, budget and complexity. The exam expects you to order them from cheapest/slowest to most expensive/fastest and match descriptions to names.',
+      ],
+    },
+    {
+      title: 'AWS Backup building blocks',
+      body: [
+        '**Backup plan:** the policy. **Backup rule:** schedule, window, lifecycle (transition to cold storage, retention) and optional copy actions. **Resource assignment:** which resources the plan protects, by ID or by tag. **Backup vault:** the encrypted container where recovery points are stored. **Recovery point:** a saved backup of a resource.',
+        'Beyond the basics, AWS Backup can copy backups across **Regions** and across **accounts** inside AWS Organizations, and **Backup Audit Manager** provides built-in controls and reports to show compliance. It supports incremental backups for resource types that allow it.',
+        'It complements, not replaces, service-native features; backups taken outside AWS Backup are not governed by it.',
+      ],
+    },
+    {
+      title: 'Lifecycle policies recap',
+      body: [
+        '**S3 Lifecycle:** transition objects between storage classes and expire them by age; ideal for cost control and retention on S3 data.',
+        '**AWS Backup lifecycle:** within a backup rule, transition recovery points from warm to cold storage after a set time and delete them after the retention period.',
+        '**Amazon Data Lifecycle Manager:** automates creation and retention of EBS snapshots (and AMIs). All three express the same idea: automate what happens to data as it ages.',
+      ],
+    },
+  ],
+  howItWorks: [
+    'In AWS Backup you define a **backup plan** with rules (schedule, window, lifecycle, copy destinations) and **assign resources** by tags or IDs.',
+    'At each scheduled time AWS Backup creates **recovery points** in an encrypted **backup vault**, transitioning old ones to cold storage and deleting them according to the lifecycle, and copying them to other Regions or accounts if configured.',
+    'To restore, you pick a recovery point in the console, API or CLI and restore it as a new resource (for example a new EBS volume or file system).',
+    'With **Elastic Disaster Recovery** you install the replication agent on source servers; data is continuously replicated to a staging area in your chosen Region, you run non-disruptive drills, and during an incident you launch recovery instances on AWS and later fail back.',
+    'For a multi-Region **DR strategy** you combine replication (S3 CRR, database replicas, snapshots copied across Regions), infrastructure as code and DNS or traffic routing to shift users to the recovery Region.',
+  ],
+  whenToUse: [
+    'AWS Backup when you need centralised, policy-based, auditable backups across many AWS services and accounts, with retention and cold-storage rules.',
+    'AWS Elastic Disaster Recovery to protect on-premises or cloud servers and applications with continuous replication and fast recovery at low steady-state cost.',
+    'Backup and restore for non-critical workloads with relaxed RTO and RPO; pilot light or warm standby for important workloads; multi-site active/active for mission-critical workloads that cannot tolerate downtime.',
+  ],
+  limitations: [
+    'Backups alone give slower recovery: with backup and restore you must rebuild infrastructure, so RTO can be long.',
+    'Faster DR strategies cost more: warm standby and active/active run duplicate resources, and active/active adds data-consistency complexity.',
+    'AWS Backup governs only the backups it manages, and feature support varies by resource type (for example not every type supports incremental backups).',
+    'Elastic Disaster Recovery is not a general file backup tool: it protects servers and applications and you still need tested drills to prove your recovery objectives.',
+    'RTO and RPO are targets you design for and test; they are not automatic guarantees from any service.',
+  ],
+  keyTerms: [
+    { term: 'AWS Backup', definition: 'Fully managed service that centralises and automates policy-based backups across AWS services and some on-premises resources.' },
+    { term: 'Backup plan', definition: 'The AWS Backup policy made of rules that define schedule, backup window, lifecycle and copy actions.' },
+    { term: 'Backup vault', definition: 'An encrypted container in AWS Backup in which recovery points are stored.' },
+    { term: 'AWS Elastic Disaster Recovery', definition: 'Service that continuously replicates servers to AWS and launches recovery instances quickly after a disruption, with failback to the source site.' },
+    { term: 'RTO (Recovery Time Objective)', definition: 'The maximum acceptable time to restore service after a disruption (acceptable downtime).' },
+    { term: 'RPO (Recovery Point Objective)', definition: 'The maximum acceptable amount of data loss measured in time (age of the latest recoverable data).' },
+    { term: 'Backup and restore', definition: 'DR strategy that restores data from backups and redeploys infrastructure after a disaster; lowest cost, longest recovery.' },
+    { term: 'Pilot light', definition: 'DR strategy that keeps replicated data and a minimal core always on, with the rest of the environment switched off until failover.' },
+    { term: 'Warm standby', definition: 'DR strategy with a scaled-down but fully functional copy always running in another Region.' },
+    { term: 'Multi-site active/active', definition: 'DR strategy where the workload runs and serves traffic in multiple Regions at once.' },
+  ],
+  related: [
+    { lessonId: 'm09-s3-and-storage-classes', why: 'S3 versioning, replication, lifecycle and Glacier classes are DR building blocks.' },
+    { lessonId: 'm09-block-storage', why: 'EBS snapshots are the native backup mechanism that AWS Backup can automate.' },
+    { lessonId: 'm05-high-availability-multi-region-edge', why: 'Multi-AZ and multi-Region design underpins DR strategies.' },
+    { lessonId: 'm01-well-architected-framework', why: 'Reliability pillar guidance covers backups, recovery objectives and testing.' },
+    { lessonId: 'm04-infrastructure-as-code-and-management-tools', why: 'Infrastructure as code lets you rebuild environments quickly in a recovery Region.' },
+  ],
+  mistakes: [
+    'Mixing up RTO and RPO. RTO is about **time to restore service**; RPO is about **how much data you can lose**.',
+    'Thinking multi-AZ deployment is a full DR plan. It protects against an Availability Zone failure; Region-level disasters need cross-Region backups or standby environments.',
+    'Confusing pilot light with warm standby. Pilot light cannot serve requests until compute is started; warm standby already runs a scaled-down working copy.',
+    'Assuming AWS Backup replaces service-native backups for every case, or that it automatically backs up everything. You must assign resources to a plan.',
+    'Treating a snapshot or replica that has never been restored as a tested backup. Regular recovery tests and drills are part of the plan.',
+  ],
+  examTips: [
+    'Keyword mapping: “centrally manage and automate backups across AWS services” → **AWS Backup**; “replicate on-premises or cloud servers and recover them quickly in AWS, low RTO/RPO” → **AWS Elastic Disaster Recovery**; “maximum acceptable downtime” → **RTO**; “maximum acceptable data loss” → **RPO**.',
+    'Order the strategies from lowest cost and slowest recovery to highest cost and fastest: **backup and restore → pilot light → warm standby → multi-site active/active**.',
+    '“Minimal always-on core, rest switched off” → **pilot light**; “scaled-down but fully functional copy always running” → **warm standby**; “runs in multiple Regions simultaneously serving traffic” → **multi-site active/active**.',
+    'Transition data to cheaper storage or delete it on a schedule → **lifecycle policy** (S3 Lifecycle for objects; AWS Backup lifecycle for recovery points).',
+  ],
+  comparisons: [
+    {
+      title: 'The four DR strategies',
+      headers: ['Strategy', 'What runs in the recovery Region', 'Recovery speed', 'Cost and complexity'],
+      rows: [
+        ['Backup and restore', 'Only stored backups; infrastructure is redeployed after a disaster', 'Slowest', 'Lowest'],
+        ['Pilot light', 'Replicated data and a minimal core always on; compute switched off', 'Faster; compute must be started', 'Low to moderate'],
+        ['Warm standby', 'Scaled-down, fully functional copy that is always running', 'Fast; scale up on failover', 'Moderate to high'],
+        ['Multi-site active/active', 'Full workload serving traffic in several Regions', 'Near zero downtime for most disasters', 'Highest'],
+      ],
+    },
+    {
+      title: 'AWS Backup vs AWS Elastic Disaster Recovery vs service-native snapshots',
+      headers: ['Option', 'Main purpose', 'Typical trigger phrase'],
+      rows: [
+        ['AWS Backup', 'Central, policy-based backup of many AWS resource types with retention, copies and compliance reporting', '“Centrally manage and automate backups across services and accounts”'],
+        ['AWS Elastic Disaster Recovery', 'Continuous replication of servers and fast recovery in AWS, with failback', '“Recover on-premises or cloud servers quickly with low RPO and RTO”'],
+        ['Service-native snapshots (for example EBS snapshots)', 'Point-in-time copies for one service, managed per service', '“Back up an EBS volume”'],
+      ],
+    },
+    {
+      title: 'RTO vs RPO',
+      headers: ['Term', 'Question it answers', 'Reduced by'],
+      rows: [
+        ['RTO', 'How quickly must service be restored?', 'Pre-provisioned resources, automation, active-active designs'],
+        ['RPO', 'How much recent data can we afford to lose?', 'More frequent backups, continuous replication'],
+      ],
+    },
+  ],
+  memoryAids: [
+    '**RTO = Time (down), RPO = Point (data).** “Recovery TIME” and “Recovery POINT”.',
+    'DR ladder, cheapest to fastest: **B-P-W-M**: Backup and restore, Pilot light, Warm standby, Multi-site.',
+    'Pilot light = the small flame is on, the furnace is off. Warm standby = the furnace runs on low heat.',
+  ],
+  revision: [
+    'AWS Backup = centralised, policy-based backups (plans with rules, assigned by tag or ID, stored in vaults) with lifecycle, cross-Region and cross-account copies and compliance reporting.',
+    'AWS Elastic Disaster Recovery = continuous replication of servers to a low-cost staging area in AWS, quick recovery launch, drills and failback.',
+    'RTO = acceptable downtime; RPO = acceptable data loss (time).',
+    'DR strategies from cheapest/slowest to costliest/fastest: backup and restore, pilot light, warm standby, multi-site active/active.',
+    'Lifecycle policies automate transitions and deletion: S3 Lifecycle for objects, AWS Backup lifecycle for recovery points.',
+  ],
+  diagrams: [
+    {
+      id: 'dr-strategies',
+      type: 'flow',
+      title: 'DR strategies from lowest cost to fastest recovery',
+      caption: 'Moving right: faster recovery, higher cost and complexity.',
+      steps: [
+        { label: 'Backup and restore', detail: 'Backups only; rebuild after disaster' },
+        { label: 'Pilot light', detail: 'Data replicated; core always on; compute off' },
+        { label: 'Warm standby', detail: 'Scaled-down working copy always running' },
+        { label: 'Multi-site active/active', detail: 'All Regions serve traffic' },
+      ],
+    },
+    {
+      id: 'aws-backup-structure',
+      type: 'tree',
+      title: 'How AWS Backup is organised',
+      root: {
+        label: 'AWS Backup',
+        detail: 'Central, policy-based protection',
+        children: [
+          {
+            label: 'Backup plan',
+            detail: 'The policy',
+            children: [
+              { label: 'Backup rule', detail: 'Schedule, window, lifecycle, copy actions' },
+              { label: 'Resource assignment', detail: 'By tag or resource ID' },
+            ],
+          },
+          {
+            label: 'Backup vault',
+            detail: 'Encrypted storage for recovery points',
+            children: [{ label: 'Recovery points', detail: 'Warm storage, then cold storage, then expire' }],
+          },
+          { label: 'Copies and reporting', detail: 'Cross-Region, cross-account, Backup Audit Manager' },
+        ],
+      },
+    },
+  ],
+  references: [
+    { title: 'What is AWS Backup?', url: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html' },
+    { title: 'What is AWS Elastic Disaster Recovery?', url: 'https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html' },
+    { title: 'Disaster recovery options in the cloud (AWS whitepaper)', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
+    { title: 'Managing the lifecycle of S3 objects', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html' },
+  ],
+  knowledgeCheck: [
+    {
+      id: 'm09-backup-and-disaster-recovery-k1',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.6',
+      difficulty: 'easy',
+      stem: 'A company wants to define one backup policy and automatically apply it to its EBS volumes, EFS file systems and databases across many AWS services, with one place to monitor the results. Which service should it use?',
+      options: [
+        { id: 'a', text: 'Amazon S3 Lifecycle', explanation: 'S3 Lifecycle manages storage class transitions and expiration of S3 objects only, not backups of other services.' },
+        { id: 'b', text: 'AWS Backup', explanation: 'Correct. AWS Backup centralises and automates policy-based backups across AWS services through backup plans and vaults.' },
+        { id: 'c', text: 'AWS Storage Gateway', explanation: 'Storage Gateway provides hybrid on-premises access to AWS storage and is not a central backup policy service for AWS resources.' },
+        { id: 'd', text: 'Amazon EBS Multi-Attach', explanation: 'Multi-Attach lets certain volumes attach to multiple instances; it has nothing to do with backup policy.' },
+      ],
+      correct: ['b'],
+    },
+    {
+      id: 'm09-backup-and-disaster-recovery-k2',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.6',
+      difficulty: 'easy',
+      stem: 'In disaster recovery planning, which term describes the maximum amount of data loss, measured in time, that a business can accept?',
+      options: [
+        { id: 'a', text: 'Recovery Time Objective (RTO)', explanation: 'RTO is the acceptable amount of downtime before service is restored, not the acceptable data loss.' },
+        { id: 'b', text: 'Service-level agreement (SLA)', explanation: 'An SLA is a contractual commitment from a provider about service availability; it is not the DR measure of tolerated data loss.' },
+        { id: 'c', text: 'Mean time to repair (MTTR)', explanation: 'MTTR is an operational metric for average repair time, not the planned limit of acceptable data loss.' },
+        { id: 'd', text: 'Recovery Point Objective (RPO)', explanation: 'Correct. RPO sets how far back in time the recovered data may be, which defines the acceptable data loss.' },
+      ],
+      correct: ['d'],
+    },
+  ],
+  practice: [
+    {
+      id: 'm09-backup-and-disaster-recovery-p1',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.6',
+      difficulty: 'medium',
+      stem: 'A company keeps a minimal copy of its environment in a second Region: the database is replicated and running, but the application servers are switched off until a disaster is declared. Which DR strategy is this?',
+      options: [
+        { id: 'a', text: 'Backup and restore', explanation: 'Backup and restore keeps only backups; it does not keep a replicated database continuously running in the recovery Region.' },
+        { id: 'b', text: 'Warm standby', explanation: 'Warm standby keeps a scaled-down but fully functional copy running, including the application tier, which is not the case here.' },
+        { id: 'c', text: 'Pilot light', explanation: 'Correct. Pilot light keeps data replicated and a minimal core always on while the rest of the environment stays switched off until failover.' },
+        { id: 'd', text: 'Multi-site active/active', explanation: 'Active/active serves production traffic from several Regions at once, which is much more than a minimal core.' },
+      ],
+      correct: ['c'],
+    },
+    {
+      id: 'm09-backup-and-disaster-recovery-p2',
+      type: 'single',
+      domain: 3,
+      taskStatement: '3.6',
+      difficulty: 'medium',
+      stem: 'A company runs physical and virtual servers in its own data centre. It wants continuous replication of those servers to AWS so it can launch them within minutes during an outage, while paying only for low-cost storage and minimal compute day to day. Which service meets this need?',
+      options: [
+        { id: 'a', text: 'AWS Elastic Disaster Recovery', explanation: 'Correct. It continuously replicates source servers to a low-cost staging area in AWS and launches recovery instances when needed, with failback support.' },
+        { id: 'b', text: 'AWS Backup', explanation: 'AWS Backup runs scheduled, policy-based backups; it is not the continuous server replication and rapid recovery launch service described.' },
+        { id: 'c', text: 'Amazon S3 Cross-Region Replication', explanation: 'CRR replicates S3 objects between buckets; it does not replicate whole servers.' },
+        { id: 'd', text: 'Amazon EFS', explanation: 'EFS is a managed file system for sharing files; it is not a server replication and recovery service.' },
+      ],
+      correct: ['a'],
+    },
+    {
+      id: 'm09-backup-and-disaster-recovery-p3',
+      type: 'multi',
+      domain: 3,
+      taskStatement: '3.6',
+      difficulty: 'hard',
+      stem: 'A workload has a strict requirement to lose no more than a few minutes of data, and to be back within minutes after a Region failure. Which TWO changes would help meet BOTH objectives best? (Select TWO.)',
+      options: [
+        { id: 'a', text: 'Use continuous data replication to the recovery Region instead of nightly backups.', explanation: 'Correct. Continuous replication shrinks the RPO because the newest recoverable data is only seconds or minutes old.' },
+        { id: 'b', text: 'Move from backup and restore to a warm standby or multi-site approach.', explanation: 'Correct. Having compute already running in the recovery Region shrinks the RTO because there is less to build at failover time.' },
+        { id: 'c', text: 'Store backups in S3 Glacier Deep Archive to reduce cost.', explanation: 'Incorrect. Deep Archive minimises storage cost but restores take hours, which works against a short RTO.' },
+        { id: 'd', text: 'Back up once a week with a long retention period.', explanation: 'Incorrect. Infrequent backups increase the RPO because the latest recoverable data could be days old.' },
+        { id: 'e', text: 'Rely on EC2 instance store for the database files.', explanation: 'Incorrect. Instance store is ephemeral and would lose data when the instance stops or fails, worsening recovery.' },
+      ],
+      correct: ['a', 'b'],
+    },
+  ],
+};
